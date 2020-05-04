@@ -11,13 +11,13 @@ function runAnalysis() {
   const TEST_SET_SIZE = 10;
   const [testSet, trainingSet] = splitDataset(outputs, TEST_SET_SIZE);
 
-  let successCounter = 0;
-  testSet.forEach((set) => {
-    const bucket = knn(trainingSet, set[0]);
-    bucket === set[3] && successCounter++;
-  });
+  const accuracy = _.chain(testSet)
+    .filter(testPoint => knn(trainingSet, testPoint[0]) === testPoint[3])
+    .size()
+    .divide(TEST_SET_SIZE)
+    .value();
 
-  console.log('Accuracy: ', successCounter / TEST_SET_SIZE);
+  console.log('Accuracy: ', accuracy);
 }
 
 function knn(data, predictionPoint) {
