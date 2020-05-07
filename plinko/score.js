@@ -16,16 +16,18 @@ function onScoreUpdate(dropPosition, bounciness, size, bucketLabel) {
 
 function runAnalysis() {
   const TEST_SET_SIZE = 200;
-  const [testSet, trainingSet] = splitDataset(minMax(outputs, 3), TEST_SET_SIZE); // apply normalization
+  const k = 10;
 
-  _.range(1, 20).forEach(k => {
+  _.range(0, 3).forEach(featureIndex => {
+    const data = _.map(outputs, row => [row[featureIndex], _.last(row)]); // pick specific feature and the label
+    const [testSet, trainingSet] = splitDataset(minMax(data, 1), TEST_SET_SIZE); // apply normalization
     const accuracy = _.chain(testSet)
-      .filter(testPoint => knn(trainingSet, _.initial(testPoint), k) === testPoint[3]) // use _.initial(testPoint) so no label is present
+      .filter(testPoint => knn(trainingSet, _.initial(testPoint), k) === _.last(testPoint)) // use _.initial(testPoint) so no label is present
       .size()
       .divide(TEST_SET_SIZE)
       .value();
 
-    console.log(`For k: ${k} accuracy is: ${accuracy}`);
+    console.log(`For featureIndex: ${featureIndex} accuracy is: ${accuracy}`);
   });
 
 }
