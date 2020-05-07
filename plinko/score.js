@@ -59,3 +59,18 @@ function splitDataset(data, testCount) {
   return [testSet, trainingSet];
 }
 
+function minMax(data, featureCount) {
+  const _data = _.cloneDeep(data);
+
+  for (let i = 0; i < featureCount; i++) {
+    const column = _data.map(row => row[i]);
+    const min = _.min(column);
+    const max = _.max(column);
+
+    for (let j = 0; j < _data.length; j++) {
+      _data[j][i] = (_data[j][i] - min) / (max - min);
+    }
+  }
+
+  return _data;
+}
