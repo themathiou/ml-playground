@@ -16,7 +16,7 @@ function onScoreUpdate(dropPosition, bounciness, size, bucketLabel) {
 
 function runAnalysis() {
   const TEST_SET_SIZE = 200;
-  const [testSet, trainingSet] = splitDataset(outputs, TEST_SET_SIZE);
+  const [testSet, trainingSet] = splitDataset(minMax(outputs, 3), TEST_SET_SIZE); // apply normalization
 
   _.range(1, 20).forEach(k => {
     const accuracy = _.chain(testSet)
@@ -68,7 +68,7 @@ function minMax(data, featureCount) {
     const max = _.max(column);
 
     for (let j = 0; j < _data.length; j++) {
-      _data[j][i] = (_data[j][i] - min) / (max - min);
+      _data[j][i] = (_data[j][i] - min) / (max - min); // normalize each element
     }
   }
 
